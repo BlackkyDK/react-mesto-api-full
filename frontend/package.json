@@ -2,7 +2,6 @@
   "name": "mesto-react",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://BlackkyDK.github.io/mesto-react-auth/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -19,7 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "npm run build && scp -r ./build/* blackkydk@klementeva.students.nomoredomains.sbs:/home/blackkydk/react-mesto-api-full/frontend/build"
   },
   "eslintConfig": {
     "extends": [
