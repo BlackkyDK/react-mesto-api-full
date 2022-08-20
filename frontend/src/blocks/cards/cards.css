@@ -1,0 +1,13 @@
+.cards {
+    max-width: 880px;
+    display: grid;
+    row-gap: 20px;
+    grid-template-columns: repeat(auto-fill, 280px);
+    grid-column-gap: 18px;
+    grid-row-gap: 21px;
+    margin: auto;
+    padding: 0;
+    justify-content: center;
+    list-style-type: none;
+    min-height: 30vh;
+}

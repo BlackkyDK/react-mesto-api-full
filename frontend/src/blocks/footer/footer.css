@@ -1,0 +1,19 @@
+.footer {
+    margin: 67px auto 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 880px;
+    color: #545454;
+    /* position: fixed;
+    top: 80%;
+    left: 15%; */
+    padding: 60px;
+}
+
+@media screen and (max-width: 900px) {
+    .footer {
+        margin: 48px 19px 0;
+        padding-bottom: 36px;
+    }
+}

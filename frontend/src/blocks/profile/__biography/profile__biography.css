@@ -1,0 +1,13 @@
+.profile__biography {
+    display: flex;
+    margin-left: 10px;
+    width: 354px;
+    margin-top: 26px;
+}
+
+@media screen and (max-width: 900px) {
+    .profile__biography {
+        margin: 0;
+        width: 282px;
+    }
+}

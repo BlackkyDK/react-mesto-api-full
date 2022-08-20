@@ -1,0 +1,5 @@
+.popup__register-image {
+  display: flex;
+  margin: 35px auto 7px;
+  justify-content: center;
+}
