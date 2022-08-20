@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://auth.nomoreparties.co';
+export const BASE_URL = 'https://klementeva.students.nomoredomains.sbs';
 
 function checkResponse(res) {
   if (res.ok) {
