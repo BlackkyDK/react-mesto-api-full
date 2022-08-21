@@ -123,9 +123,8 @@ function App() {
       })
       .catch((error) => console.log(error));
   }
-  function handleRegister(email, password) {
-    return auth
-      .register(password, email)
+  function handleRegister(data) {
+    auth.register(data.email, data.password)
       .then(() => {
         setIsSuccess(true);
         setIsInfoTooltipOpen(true);
@@ -223,7 +222,7 @@ function App() {
           </Route>
 
         </Switch>
-        
+
         {loggedIn && <Footer />}
 
         <InfoTooltip

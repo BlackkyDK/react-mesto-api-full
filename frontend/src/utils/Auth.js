@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://klementeva.students.nomoredomains.sbs';
+export const BASE_URL = 'http://localhost:3000';
 
 function checkResponse(res) {
   if (res.ok) {
@@ -16,7 +16,7 @@ export const register = (email, password) => {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ "email": email, "password": password  })
+    body: JSON.stringify({ password: password, email: email  })
   })
   .then((res) => checkResponse(res));
 };
@@ -42,5 +42,5 @@ export const checkToken = (token) => {
       "Authorization": `Bearer ${token}`
     }
   })
-  .then((res) => checkResponse(res));
+  .then(res => checkResponse(res));
 };
