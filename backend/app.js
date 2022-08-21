@@ -24,7 +24,10 @@ app.use(cors({
   origin: [
     'https://klementeva.students.nomoredomains.sbs',
     'http://klementeva.students.nomoredomains.sbs',
-    'localhost:3000',
+    'http://localhost:3000',
+    'https://locahost:3000',
+    'http://localhost:3001',
+    'https://locahost:3001',
   ],
   credentials: true,
   methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
