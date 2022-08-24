@@ -8,8 +8,9 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-html-parser": "^2.0.2",
     "react-router-dom": "^5.2.1",
-    "react-scripts": "^2.1.3",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -18,7 +19,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "npm run build && scp -r ./build/* blackkydk@klementeva.students.nomoredomains.sbs:/home/blackkydk/react-mesto-api-full/frontend/build"
+    "deploy": "npm run build && scp -r ./build/* blackkydk@api.klementeva.students.nomoredomains.sbs:/home/blackkydk/react-mesto-api-full/frontend/build"
   },
   "eslintConfig": {
     "extends": [
