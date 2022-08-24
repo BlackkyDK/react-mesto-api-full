@@ -1,8 +1,8 @@
+const { JWT_SECRET, NODE_ENV } = process.env;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const AuthError = require('../errors/AuthError');
 const BadRequest = require('../errors/BadRequest');
 const Conflict = require('../errors/Conflict');
 const NotFound = require('../errors/NotFound');
@@ -42,20 +42,12 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'super-secret', { expiresIn: '7d' });
-      if (!email || !password) {
-        next(new AuthError('Некорректный email или пароль.'));
-      }
-      res.cookie('jwt', token, {
-        maxAge: 604800000,
-        httpOnly: true,
-      }).send({ token });
+      const token = jwt.sign({ _id: user._id }, `${NODE_ENV === 'production' ? JWT_SECRET : 'super-secret'}`, { expiresIn: '7d' });
+      res.send({ token });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 const getUsers = (req, res, next) => {
@@ -116,15 +108,28 @@ const updateAvatar = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  const { id } = req.params;
+  User.findById(id)
     .then((user) => {
       if (!user) {
-        next(new NotFound('Пользователь не найден.'));
+        throw new NotFound('Пользователь по указанному _id не найден.');
       }
-      return res.send({ data: user });
+      return res.send({
+        user: {
+          email: user.email,
+          name: user.name,
+          avatar: user.avatar,
+          about: user.about,
+          _id: user._id,
+        },
+      });
     })
     .catch((err) => {
-      next(err);
+      if (err.name === 'CastError') {
+        next(new BadRequest('Передан некорректный _id пользователя.'));
+      } else {
+        next(err);
+      }
     });
 };
 

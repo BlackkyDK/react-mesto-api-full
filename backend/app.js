@@ -1,7 +1,8 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 
 const { errors } = require('celebrate');
 const cors = require('cors');
@@ -20,6 +21,9 @@ const { createUser, login } = require('./controllers/users');
 
 mongoose.connect('mongodb://localhost:27017/myDB');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cors({
   origin: [
     'https://klementeva.students.nomoredomains.sbs',
@@ -33,10 +37,6 @@ app.use(cors({
   methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // app.use((req, res, next) => {
 //   req.user = { _id: '62dee506a7aff95bb45c420d' };
