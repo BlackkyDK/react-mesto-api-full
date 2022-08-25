@@ -28,6 +28,8 @@ app.use(cors({
   origin: [
     'https://klementeva.students.nomoredomains.sbs',
     'http://klementeva.students.nomoredomains.sbs',
+    'https://api.klementeva.students.nomoredomains.sbs',
+    'http://api.klementeva.students.nomoredomains.sbs',
     'http://localhost:3000',
     'https://locahost:3000',
     'http://localhost:3001',
