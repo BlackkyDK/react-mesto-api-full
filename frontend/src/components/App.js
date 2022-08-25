@@ -31,55 +31,37 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt){
-      auth.checkToken(jwt)
-        .then(res => {
-          if (res) {
-            setLoggedIn(true)
-            setEmail(email)
-          }
-        })
-        .catch(err => console.log(`Нет токена: ${err}`))
-    }
-  }, [])
-
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     api
-  //       .getProfile()
-  //       .then((userInfo) => {
-  //         setCurrentUser(userInfo);
-  //       })
-  //       .catch((res) => {
-  //         console.log(res);
-  //       });
-  //     api
-  //       .getInitialCards()
-  //       .then((cards) => {
-  //         setCards(cards);
-  //       })
-  //       .catch((res) => {
-  //         console.log(res);
-  //       });
-  //     return;
-  //   }
-  // }, [loggedIn]);
-  useEffect(() => {
+    checkToken();
     if (loggedIn) {
-      Promise.all([api.getProfile(), api.getInitialCards()])
+      history.push('/');
+    Promise.all([api.getProfile(), api.getInitialCards()])
       .then(([userInfo, cards]) => {
-        setCurrentUser(userInfo)
-        setCards(cards)
-      }).catch(err => console.log(`Ошибка: ${err}`));
-    }
-  }, [loggedIn])
+        setCurrentUser(userInfo);
+        setCards(cards.reverse());
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      }
+  }, [loggedIn]);
 
-  useEffect(() => {
-    if (loggedIn) {
-      history.push('/')
+  const checkToken = () => {
+    const token = localStorage.getItem('jwt');
+    if(token) {
+      setLoggedIn(true);
+    auth
+      .getToken(token)
+      .then((res) => {
+        if(res) {
+          setEmail(res.email)
+        };
+        history.push('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     }
-  }, [loggedIn])
+  }
 
   function handleEditProfileClick() {
     setEditProfileOpen(true);
@@ -132,7 +114,7 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     api
       .changeLikeStatus(card._id, !isLiked)
       .then((newCard) => {
@@ -152,6 +134,7 @@ function App() {
       })
       .catch((error) => console.log(error));
   }
+
   function handleRegister(email, password) {
     return auth.register(password, email)
       .then(() => {
@@ -184,35 +167,11 @@ function App() {
       });
   }
 
-  // function checkToken() {
-  //   const jwt = localStorage.getItem("jwt");
-  //   if (jwt) {
-  //     setIsSuccess(true);
-  //     auth
-  //       .checkToken(jwt)
-  //       .then((res) => {
-  //         console.log("token: ", res);
-  //         setEmail(res.data.email);
-  //         setLoggedIn(true);
-  //         history.push("/");
-  //       })
-  //       .catch((err) => {
-  //         console.log("err:", err);
-  //         setIsSuccess(false);
-  //         setIsInfoTooltipOpen(true);
-  //       });
-  //   }
-  // }
-
   function handleSignOut() {
     localStorage.removeItem("jwt");
     setLoggedIn(false);
     history.push("/sign-in");
   }
-
-  // useEffect(() => {
-  //   checkToken();
-  // }, []);
 
   return (
     <div className="root">

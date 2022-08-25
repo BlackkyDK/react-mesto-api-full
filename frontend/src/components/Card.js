@@ -4,9 +4,9 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 function Card(props) {
   const currentUser = useContext(CurrentUserContext);
   // Определяем, являемся ли мы владельцем текущей карточки
-  const isOwner = props.card.owner._id === currentUser._id;
+  const isOwner = props.card.owner === currentUser._id || props.card.owner._id === currentUser._id;
   // Снова проверяем, есть ли уже лайк на этой карточке
-  const isLiked = props.card.likes.some((i) => i._id === currentUser._id);
+  const isLiked = props.card.likes.some(i => i === currentUser._id);
 
   function handleCardClick() {
     props.onCardClick(props.card);

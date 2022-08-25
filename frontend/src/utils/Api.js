@@ -1,47 +1,42 @@
 
 class Api {
-  constructor({ baseUrl, headers }) {
-    this._headers = headers;
+  constructor({ baseUrl }) {
     this._baseUrl = baseUrl;
   }
 
   _checkResponse(res) {
-        if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(console.log(`Ошибка: ${res.status}`));
-    }
+    if (res.ok) {
+      return res.json()
+  } else {
+      return Promise.reject(res.status)
+  }
   }
 
-  _getHeaders() {
-    const jwt = localStorage.getItem('jwt');
+  get _headers() {
     return {
-      'Authorization': `Bearer ${jwt}`,
-      ...this._headers
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
     }
-  }
+}
 
   getProfile() {
     return fetch(`${this._baseUrl}/users/me`, {
     //method: "GET",
     // credentials: 'include',
-    headers: this._getHeaders()
+    headers: this._headers
     }).then(this._checkResponse);
   }
 
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
-      //method: "GET",
-      // credentials: 'include',
-      headers: this._getHeaders()
+      headers: this._headers
     }).then(this._checkResponse);
   }
 
   editProfile(name, about) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      // credentials: 'include',
-      headers: this._getHeaders(),
+      headers: this._headers,
       body: JSON.stringify({
         name,
         about,
@@ -52,8 +47,7 @@ class Api {
   addCard(name, link) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      // credentials: 'include',
-      headers: this._getHeaders(),
+      headers: this._headers,
       body: JSON.stringify({
         name,
         link,
@@ -64,24 +58,21 @@ class Api {
   deleteCard(id) {
     return fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
-      // credentials: 'include',
-      headers: this._getHeaders(),
+      headers: this._headers,
     }).then(this._checkResponse);
   }
 
   changeLikeStatus(id, isLiked) {
     return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: isLiked ? "PUT" : "DELETE",
-      // credentials: 'include',
-      headers: this._getHeaders(),
+      headers: this._headers,
     }).then(this._checkResponse);
   }
 
   changeAvatar(avatar) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      // credentials: 'include',
-      headers: this._getHeaders(),
+      headers: this._headers,
       body: JSON.stringify({
         avatar,
       }),
@@ -89,12 +80,9 @@ class Api {
   }
 }
 
-const api = new Api(
-  'http://api.klementeva.students.nomoredomains.sbs',
-   {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-);
+const api = new Api({
+  baseUrl: 'http://api.klementeva.students.nomoredomains.sbs',
+  // baseUrl: 'http://localhost:3000',
+});
 
 export default api;

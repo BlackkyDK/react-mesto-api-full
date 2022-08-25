@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://klementeva.students.nomoredomains.sbs';
+export const BASE_URL = 'http://api.klementeva.students.nomoredomains.sbs';
 // export const BASE_URL = 'http://localhost:3000';
 
 function checkResponse(res) {
@@ -21,14 +21,13 @@ export const register = (email, password) => {
     },
     body: JSON.stringify({ password, email  })
   })
-  .then((res) => checkResponse(res));
+  .then(checkResponse);
 };
 
 //Параметры запроса для авторизации в нашем сервисе
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
-    // credentials: 'include',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -39,15 +38,14 @@ export const authorize = (email, password) => {
 };
 
 //Параметры запроса для проверки валидности токена и получения email для вставки в шапку сайта
-export const checkToken = (token) => {
+export const getToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
-    //credentials: 'include',
     headers: {
-      'Accept': 'application/json',
+      // 'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     }
   })
-  .then(res => checkResponse(res));
+  .then((res) => checkResponse(res));
 };
