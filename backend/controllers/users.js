@@ -42,7 +42,7 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, `${NODE_ENV === 'production' ? JWT_SECRET : 'super-secret'}`, { expiresIn: '7d' });
       res.send({ token });
@@ -52,7 +52,7 @@ const login = (req, res, next) => {
 
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.send(users))
     .catch((err) => {
       next(err);
     });
@@ -108,28 +108,11 @@ const updateAvatar = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  const { id } = req.params;
-  User.findById(id)
+  User.findById(req.user._id)
     .then((user) => {
-      if (!user) {
-        throw new NotFound('Пользователь по указанному _id не найден.');
-      }
-      return res.send({
-        user: {
-          email: user.email,
-          name: user.name,
-          avatar: user.avatar,
-          about: user.about,
-          _id: user._id,
-        },
-      });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequest('Передан некорректный _id пользователя.'));
-      } else {
-        next(err);
-      }
+      res.send(user);
+    }).catch((err) => {
+      next(err);
     });
 };
 

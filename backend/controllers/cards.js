@@ -5,14 +5,15 @@ const NotFound = require('../errors/NotFound');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .populate('owner')
+    .then((cards) => res.send(cards))
     .catch((err) => next(err));
 };
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Переданы некорректные данные при создании карточки.'));
@@ -26,22 +27,22 @@ const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFound('Карточка с указанным _id не найдена.'));
-      } else if (req.user._id !== card.owner.toString()) {
-        next(new Forbidden('Отсутствуют права для удаления данной карточки'));
-      } else {
-        Card.findByIdAndRemove(req.params.cardId).then((removedCard) => {
-          res.send({ data: removedCard });
+        throw new NotFound('Карточка с указанным _id не найдена.');
+      } if (req.user._id === card.owner.toString()) {
+        Card.findByIdAndRemove(req.params.cardId).then(() => {
+          res.send({ data: card });
+        }).catch((err) => {
+          if (err.name === 'CastError') {
+            next(new BadRequest('Переданы некорректные данные карточки'));
+            return;
+          }
+          next(err);
         });
+        return;
       }
+      throw new Forbidden('Отсутствуют права для удаления данной карточки');
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequest('Переданы некорректные данные карточки'));
-      } else {
-        next(err);
-      }
-    });
+    .catch((err) => next(err));
 };
 
 const likeCard = (req, res, next) => {
@@ -54,7 +55,7 @@ const likeCard = (req, res, next) => {
       next(new NotFound('Передан несуществующий _id карточки.'));
       return;
     }
-    res.send({ data: card });
+    res.send(card);
   })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -75,7 +76,7 @@ const dislikeCard = (req, res, next) => {
       next(new NotFound('Передан несуществующий _id карточки.'));
       return;
     }
-    res.send({ data: card });
+    res.send(card);
   })
     .catch((err) => {
       if (err.name === 'CastError') {
